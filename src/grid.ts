@@ -9,12 +9,15 @@ export default class Grid  {
     private closedSet: any [] = [];
     private start: number[][];
     private end: number[][];
+    private cellSize: number;
 
     private noSolutionFlag: boolean = false;
 
-    constructor(cols: number, rows: number) {
+    constructor(cols: number, rows: number, size: number) {
         this.columns = cols;
         this.rows = rows;
+        this.cellSize = size;
+        
         this.buildGrid();
         this.buildCells();
         this.calculateStartAndEnd();
@@ -22,18 +25,22 @@ export default class Grid  {
     }
 
     private buildGrid(): void {
-        this.grid = new Array();
+        this.grid = new Array(this.columns);
         for (var i = 0; i < this.columns; i++) {
-            this.grid[i] = new Array(this.rows);
+            this.grid[i] = new Array(this.rows)
         }
+
+        console.log('empty grid is ', this.grid);
     }
 
     private buildCells(): any {
-        this.grid.forEach((column: any, columnIndex: number) => {
-            column.forEach((row: any, rowIndex: number) => {
-                this.grid[column][row] = new Cell(columnIndex, rowIndex, this.columns, this.rows, this.columns);
-            })
-        })
+        //using forloop as dodgey javascirpt behaviour with foreaching thorugh a new'd array
+        for (var i = 0; i < this.columns; i++) {
+            for (var j = 0; j < this.rows; j++) {
+                this.grid[i][j] = new Cell(i, j, this.columns, this.rows, this.cellSize);
+            }
+        }
+        console.log('Grid  at build cells is now ', this.grid);
     }
 
     private calculateStartAndEnd() {
@@ -49,19 +56,23 @@ export default class Grid  {
         }
     }
 
-    public showOpenSet(): void {
-        this.openSet.forEach((column: any) => {
-            column.forEach((row: any) => {
-                this.grid[column][row].show(color(66, 83, 244));
+    public drawGrid(): void {
+        this.grid.forEach((column: any, columnIndex: number) => {
+            column.forEach((row: Cell, rowIndex: number) => {
+                row.show(color(90, 90, 90));
             })
         })
     }
 
-    public showClosedSet(): void {
-        this.closedSet.forEach((column: any) => {
-            column.forEach((row: any) => {
-                this.grid[column][row].show(color(244, 66, 66));
-            })
+    public drawOpenSet(): void {
+        this.openSet.forEach((column: any, columnIndex: number) => {
+            column.show(color(66, 83, 244));
+        })
+    }
+
+    public drawClosedSet(): void {
+        this.closedSet.forEach((column: any, columnIndex: number) => {
+            column.show(color(244, 66, 66));
         })
     }
 

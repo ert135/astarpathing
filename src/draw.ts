@@ -16,15 +16,18 @@ declare global {
     }
 }
 
-let grid = new Grid(30,30);
+let grid: Grid;
+let size = 800;
 
 let setup = function() {
-    createCanvas(800, 800);
-    
+    createCanvas(size, size);
+    grid =  new Grid(30,30, size);
 }
 
 let draw = function() {
-    
+    grid.drawGrid()
+    grid.drawOpenSet()
+    grid.drawClosedSet()
 }
 
 let mouseClicked = function() {

@@ -8,17 +8,18 @@ export default class Cell {
     private width: number;
     private height: number;
 
-    constructor(x: number, y: number, width: number, height: number, cols: number) {
+    constructor(x: number, y: number, cols: number, rows: number, cellSize: number) {
         this.x = x;
-        this.y= y;
+        this.y = y;
 
-        this.width = width / cols;
-        this.height = height / cols;
+       this.width = cols / cellSize;
+       this.height = rows / cellSize;
+       console.log('width is ', this.width);
+       console.log('height is ', this.height);
     }
 
-    public show (color: any): void {
-        fill(color)
+    public show(color: any): void {
         stroke(0)
-        rect(this.x*this.width, this.y*this.height, this.width, this.height)
+        rect(10, 10, this.width, this.height)
     }
 }
