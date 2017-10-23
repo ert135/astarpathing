@@ -1,6 +1,6 @@
-# Space colonization algorithm
+# A* Pathing algorthim
 
-An implimintation of a space colonization algorithm, written in typescript using p5. 
+An implementation of an A* pathing algorithm, written in typescript using p5. 
 
 ### To run:
 
