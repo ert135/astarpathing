@@ -1,4 +1,5 @@
-import Cell from './cell' 
+import Cell from './cell';
+import * as R from 'ramda';
 
 export default class Grid  {
 
@@ -77,7 +78,7 @@ export default class Grid  {
         })
     }
 
-    private getHighestFValue(): number {
+    private getHighestFValueIndex(): number {
         return this.openSet.reduce((accumlator: number, currentValue: Cell , index: number, array: Array<Cell>) => {
             console.log('this cxheck is ', currentValue.f < array[accumlator].f ? index : accumlator);
             return currentValue.f < array[accumlator].f ? index : accumlator;
@@ -96,10 +97,12 @@ export default class Grid  {
 
     public step(): void {
         //loop through open set to get greatest f value;
-        let winnerFCellIndex = this.getHighestFValue();
+        let winnerFCellIndex = this.getHighestFValueIndex();
         console.log('winner f cell is ', winnerFCellIndex);
         let current = this.openSet[winnerFCellIndex];
-        console.log('Current is ', current)
+        console.log('Current is ', current);
+
+        console.log('oghhhhhis it true!!!????', R.equals(current, this.grid[0][4]));
 
         if (current === this.end) {
             console.log('done');
