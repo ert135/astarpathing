@@ -14,16 +14,11 @@ export default class Cell {
 
        this.width = cellSize / cols;
        this.height = cellSize / rows;
-       console.log('width is ', this.width);
-       console.log('height is ', this.height);
-       console.log('cell size is ', cellSize);
-       console.log('cols is ', cols);
-       console.log('rows is ', rows);
     }
 
     public show(color: any): void {
         fill(color)
         stroke(0)
-        rect(this.x * this.width, this.y * this.width, this.width, this.height)
+        rect(this.x * this.width, this.y * this.height, this.width, this.height)
     }
 }

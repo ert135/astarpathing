@@ -8,7 +8,7 @@ export default class Grid  {
     private openSet: any = [];
     private closedSet: any [] = [];
     private start: number[][];
-    private end: number[][];
+    private end: Cell;
     private cellSize: number;
 
     private noSolutionFlag: boolean = false;
@@ -29,8 +29,6 @@ export default class Grid  {
         for (var i = 0; i < this.columns; i++) {
             this.grid[i] = new Array(this.rows)
         }
-
-        console.log('empty grid is ', this.grid);
     }
 
     private buildCells(): any {
@@ -40,7 +38,6 @@ export default class Grid  {
                 this.grid[i][j] = new Cell(i, j, this.columns, this.rows, this.cellSize);
             }
         }
-        console.log('Grid  at build cells is now ', this.grid);
     }
 
     private calculateStartAndEnd() {
@@ -54,6 +51,10 @@ export default class Grid  {
         } else {
             this.noSolutionFlag = true;
         }
+    }
+
+    public hasNoSolution(): boolean {
+        return this.noSolutionFlag;
     }
 
     public drawGrid(): void {
@@ -76,4 +77,39 @@ export default class Grid  {
         })
     }
 
+    private getHighestFValue(): number {
+        return this.openSet.reduce((accumlator: number, currentValue: Cell , index: number, array: Array<Cell>) => {
+            console.log('this cxheck is ', currentValue.f < array[accumlator].f ? index : accumlator);
+            return currentValue.f < array[accumlator].f ? index : accumlator;
+        }, 0);
+    }
+
+    private removeFromArray(arr: Array<Cell>, element: Cell): any {
+        for (var i = arr.length -1; i>=0; i--) {
+            console.log('arrayi', arr[i]);
+            console.log('thing ', element);
+            if (arr[i] == element) {
+                arr.splice(i)
+            }
+        }
+    }
+
+    public step(): void {
+        //loop through open set to get greatest f value;
+        let winnerFCellIndex = this.getHighestFValue();
+        console.log('winner f cell is ', winnerFCellIndex);
+        let current = this.openSet[winnerFCellIndex];
+        console.log('Current is ', current)
+
+        if (current === this.end) {
+            console.log('done');
+        }
+
+        //filter out closed set
+        console.log('before ', this.openSet);
+        this.removeFromArray(this.openSet, current);
+        console.log('remove from array is ' , this.removeFromArray(this.openSet, current));
+        console.log('after', this.openSet)
+        // this.closedSet.push(current);
+    }
 }

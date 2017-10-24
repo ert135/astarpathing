@@ -25,9 +25,14 @@ let setup = function() {
 }
 
 let draw = function() {
-    grid.drawGrid()
-    grid.drawOpenSet()
-    grid.drawClosedSet()
+    if (grid.hasNoSolution() === false) {
+        grid.drawGrid();
+        grid.drawOpenSet();
+        grid.drawClosedSet();
+        grid.step();
+    } else {
+        //perform stop procedure
+    }
 }
 
 let mouseClicked = function() {
