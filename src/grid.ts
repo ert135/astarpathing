@@ -1,5 +1,6 @@
 import Cell from './cell';
 import * as R from 'ramda';
+import * as gridFunctions from './gridFunctions'
 
 export default class Grid  {
 
@@ -7,7 +8,7 @@ export default class Grid  {
     private columns: number = 5;
     private rows: number = 5;
     private openSet: any = [];
-    private closedSet: any [] = [];
+    private closedSet: any [] = new Array();
     private start: number[][];
     private end: Cell;
     private cellSize: number;
@@ -18,6 +19,8 @@ export default class Grid  {
         this.columns = cols;
         this.rows = rows;
         this.cellSize = size;
+
+        this.closedSet = new Array();
         
         this.buildGrid();
         this.buildCells();
@@ -85,34 +88,21 @@ export default class Grid  {
         }, 0);
     }
 
-    private removeFromArray(arr: Array<Cell>, element: Cell): any {
-        for (var i = arr.length -1; i>=0; i--) {
-            console.log('arrayi', arr[i]);
-            console.log('thing ', element);
-            if (arr[i] == element) {
-                arr.splice(i)
-            }
-        }
-    }
-
     public step(): void {
         //loop through open set to get greatest f value;
         let winnerFCellIndex = this.getHighestFValueIndex();
-        console.log('winner f cell is ', winnerFCellIndex);
         let current = this.openSet[winnerFCellIndex];
-        console.log('Current is ', current);
 
-        console.log('oghhhhhis it true!!!????', R.equals(current, this.grid[0][4]));
+        console.log('current here is now ', current);
 
-        if (current === this.end) {
-            console.log('done');
-        }
+        // if (R.equals(current, this.end)) {
+        //     // end the loop
+        // }
 
-        //filter out closed set
-        console.log('before ', this.openSet);
-        this.removeFromArray(this.openSet, current);
-        console.log('remove from array is ' , this.removeFromArray(this.openSet, current));
-        console.log('after', this.openSet)
-        // this.closedSet.push(current);
+        console.log('current here us ', current);
+        this.openSet = R.reject(R.equals(current), this.openSet);
+        console.log('after filter is ', current);
+        this.closedSet = R.insert(this.closedSet.length, current, this.closedSet)
+        console.log('closed set is ', this.closedSet);
     }
 }

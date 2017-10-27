@@ -1,0 +1,7 @@
+const checkArray = () => {
+
+}
+
+export {
+    checkArray
+}
