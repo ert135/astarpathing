@@ -6,12 +6,12 @@ import * as gridFunctions from './gridFunctions'
 
 export default class Grid  {
 
-    private grid: any;
+    private grid: Array<Array<Cell>>;
     private columns: number = 5;
     private rows: number = 5;
     private openSet: any = [];
     private closedSet: any [] = new Array();
-    private start: number[][];
+    private start: Cell;
     private end: Cell;
     private cellSize: number;
     private mouseHover: MouseHover;
@@ -44,7 +44,7 @@ export default class Grid  {
         //using forloop as dodgey javascirpt behaviour with foreaching thorugh a new'd array
         for (var i = 0; i < this.columns; i++) {
             for (var j = 0; j < this.rows; j++) {
-                this.grid[i][j] = new Cell(i, j, this.columns, this.rows, this.cellSize);
+                this.grid[i][j] = new Cell(i, j, this.columns, this.rows, this.cellSize, this.grid);
             }
         }
     }

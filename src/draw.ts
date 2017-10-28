@@ -23,7 +23,7 @@ let size = 800;
 let setup = function() {
     console.log('Mouse hover is ', MouseHover);
     createCanvas(size, size);
-    grid =  new Grid(30,30, size);
+    grid =  new Grid(50,50, size);
 }
 
 let draw = function() {
