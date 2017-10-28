@@ -1,6 +1,7 @@
 import Cell from './cell';
-import * as R from 'ramda';
 import MouseHover from './mouseHover';
+
+import * as R from 'ramda';
 import * as gridFunctions from './gridFunctions'
 
 export default class Grid  {
@@ -22,7 +23,7 @@ export default class Grid  {
         this.rows = rows;
         this.cellSize = size;
 
-        let mouseHover = new MouseHover()
+        this.mouseHover = new MouseHover()
 
         this.closedSet = new Array();
         
@@ -81,33 +82,31 @@ export default class Grid  {
 
     public drawClosedSet(): void {
         this.closedSet.forEach((column: any, columnIndex: number) => {
-            column.show(color(244, 66, 66));
+            // column.show(color(244, 66, 66));
         })
     }
 
     private getHighestFValueIndex(): number {
         return this.openSet.reduce((accumlator: number, currentValue: Cell , index: number, array: Array<Cell>) => {
-            console.log('this cxheck is ', currentValue.f < array[accumlator].f ? index : accumlator);
             return currentValue.f < array[accumlator].f ? index : accumlator;
         }, 0);
     }
 
+    private getNeigbours(): void {
+
+    }
+
     public step(): void {
         //loop through open set to get greatest f value;
-        this.mouseHover.isIntersectingWithBox(this.grid);
         let winnerFCellIndex = this.getHighestFValueIndex();
         let current = this.openSet[winnerFCellIndex];
 
-        console.log('current here is now ', current);
+        if (R.equals(current, this.end)) {
+            // end the loop
+        }
 
-        // if (R.equals(current, this.end)) {
-        //     // end the loop
-        // }
-
-        console.log('current here us ', current);
         this.openSet = R.reject(R.equals(current), this.openSet);
-        console.log('after filter is ', current);
         this.closedSet = R.insert(this.closedSet.length, current, this.closedSet)
-        console.log('closed set is ', this.closedSet);
+        this.mouseHover.isIntersectingWithBox(this.grid);
     }
 }

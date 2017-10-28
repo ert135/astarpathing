@@ -3,16 +3,14 @@ import * as R from 'ramda';
 
 export default class MouseHover {
 
-    constructor(){
+    constructor() {
 
     }
 
-    public isIntersectingWithBox(grid: Array<Cell>): void {
-        console.log('called here!!!');
+    public isIntersectingWithBox(grid: Array<Array<Cell>>): void {
         //go through every box and check if the mosue is intersecting with any of them 
         let mouseXWithinBox = (cell: Cell) => {
-            if(this.between(mouseX, cell.x, cell.y)) {
-                console.log('Shoudl be true!!')
+            if(this.between(mouseX, cell.x * cell.height, (cell.x * cell.height + cell.height)))  {
                 return true;
             }
 
@@ -20,19 +18,20 @@ export default class MouseHover {
         }
 
         let mouseYWithinBox = (cell: Cell) => {
-            if(this.between(mouseY, cell.y, cell.y)) {
-                console.log('Could be true!!!');
+            if(this.between(mouseY, cell.y * cell.width, (cell.y * cell.width + cell.width))) {
                 return true;
             }
 
             return false;
         }
 
-        grid.forEach((cell: Cell) => {
-            if(mouseXWithinBox(cell) === true && mouseYWithinBox(cell) === true){
-                cell.show(color(255,255,255));
-            }
-        })
+        grid.forEach((cell) => {
+            cell.forEach((cell: Cell) => {
+                if (mouseXWithinBox(cell) === true && mouseYWithinBox(cell) === true) {
+                    cell.hover(color(244, 66, 66));
+                }
+            });
+        });
     }
 
     private between(x: number, min: number, max: number) : boolean {
