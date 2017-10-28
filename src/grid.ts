@@ -1,5 +1,6 @@
 import Cell from './cell';
 import * as R from 'ramda';
+import MouseHover from './mouseHover';
 import * as gridFunctions from './gridFunctions'
 
 export default class Grid  {
@@ -12,6 +13,7 @@ export default class Grid  {
     private start: number[][];
     private end: Cell;
     private cellSize: number;
+    private mouseHover: MouseHover;
 
     private noSolutionFlag: boolean = false;
 
@@ -19,6 +21,8 @@ export default class Grid  {
         this.columns = cols;
         this.rows = rows;
         this.cellSize = size;
+
+        let mouseHover = new MouseHover()
 
         this.closedSet = new Array();
         
@@ -90,6 +94,7 @@ export default class Grid  {
 
     public step(): void {
         //loop through open set to get greatest f value;
+        this.mouseHover.isIntersectingWithBox(this.grid);
         let winnerFCellIndex = this.getHighestFValueIndex();
         let current = this.openSet[winnerFCellIndex];
 
