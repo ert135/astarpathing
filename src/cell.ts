@@ -9,8 +9,24 @@ export default class Cell {
     public h = 0;
     public width: number;
     public height: number;
-    private neighbors: Array<Cell>;
+    private neighbors: any;
     private grid: Array<Array<Cell>>;
+    private rows: number;
+    private columns: number;
+
+    private LURDMoves = [
+        [-1, 0],
+        [0, -1],
+        [1, 0],
+        [0, 1]
+    ];
+
+    private DiagonalMoves = [
+        [-1, -1],
+        [1, -1],
+        [1, 1],
+        [-1, 1]
+    ];
 
     constructor(x: number, y: number, cols: number, rows: number, cellSize: number, grid: Array<Array<Cell>>) {
         this.grid = grid;
@@ -19,7 +35,7 @@ export default class Cell {
 
        this.width = cellSize / cols;
        this.height = cellSize / rows;
-       this.addNeighbors();
+       this.neighbors = new Array();
     }
 
     public show(color: p5.Color): void {
@@ -34,13 +50,30 @@ export default class Cell {
         rect(this.x * this.width, this.y * this.height, this.width, this.height);
     }
 
-    private addNeighbors(): void {
-        this.neighbors = new Array();
+    private getNode(x: number, y: number): any {
+        if (
+            x < 0 || y >= this.grid.length ||
+            x < 0 || y >= this.grid[0].length) {
+            return null;
+        }
 
-        this.neighbors.push(this.grid[this.x+1][this.y]);
-        this.neighbors.push(this.grid[this.x+1][this.y]);
-        this.neighbors.push(this.grid[this.x+1][this.y]);
-        this.neighbors.push(this.grid[this.x+1][this.y]);
+        if (
+            y < 0 || x >= this.grid.length ||
+            y < 0 || x >= this.grid[0].length) {
+            return null;
+        }
+
+        return this.grid[x][y];
+    }
+
+    public populateNeighbors() {
+        //Add Left/Up/Right/Down Moves
+        for (var i = 0; i < 4; i++) {
+            const node = this.getNode(this.x + this.LURDMoves[i][0], this.y + this.LURDMoves[i][1]);
+            if (node) {
+                this.neighbors.push(node);
+            }
+        }
     }
 
     public getNeighbors(): Array<Cell> {

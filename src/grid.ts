@@ -9,26 +9,25 @@ export default class Grid  {
     private grid: Array<Array<Cell>>;
     private columns: number = 5;
     private rows: number = 5;
-    private openSet: any = [];
-    private closedSet: any [] = new Array();
+    private openSet: Array<Cell>;
+    private closedSet: Array<Cell> = new Array();
     private start: Cell;
     private end: Cell;
     private cellSize: number;
     private mouseHover: MouseHover;
-
     private noSolutionFlag: boolean = false;
 
     constructor(cols: number, rows: number, size: number) {
         this.columns = cols;
         this.rows = rows;
         this.cellSize = size;
-
         this.mouseHover = new MouseHover()
-
         this.closedSet = new Array();
+        this.openSet = new Array();
         
         this.buildGrid();
         this.buildCells();
+        this.buildNeighbors();
         this.calculateStartAndEnd();
         this.openSet.push(this.start);
     }
@@ -47,6 +46,15 @@ export default class Grid  {
                 this.grid[i][j] = new Cell(i, j, this.columns, this.rows, this.cellSize, this.grid);
             }
         }
+    }
+
+    private buildNeighbors(): void {
+        for (var i = 0; i < this.columns; i++) {
+            for (var j = 0; j < this.rows; j++) {
+               this.grid[i][j].populateNeighbors();
+            }
+        }
+        console.log('Grid after  building neighbors is ', this.grid);
     }
 
     private calculateStartAndEnd() {
@@ -82,7 +90,7 @@ export default class Grid  {
 
     public drawClosedSet(): void {
         this.closedSet.forEach((column: any, columnIndex: number) => {
-            // column.show(color(244, 66, 66));
+            column.show(color(244, 66, 66));
         })
     }
 
@@ -92,8 +100,8 @@ export default class Grid  {
         }, 0);
     }
 
-    private getNeigbours(): void {
-
+    private heuristic(pointA: Cell, pointB: Cell){
+        return dist(pointA.x, pointA.y, pointB.x, pointB.y)
     }
 
     public step(): void {
@@ -102,11 +110,36 @@ export default class Grid  {
         let current = this.openSet[winnerFCellIndex];
 
         if (R.equals(current, this.end)) {
-            // end the loop
+            console.log('END')
+            return;
         }
 
         this.openSet = R.reject(R.equals(current), this.openSet);
         this.closedSet = R.insert(this.closedSet.length, current, this.closedSet)
         this.mouseHover.isIntersectingWithBox(this.grid);
+
+        if(!current){
+            return;
+        }
+
+        let neighbors = current.getNeighbors();
+
+        neighbors.forEach((cell: Cell) => {
+            //adding one becasue all lengths are the same
+            if (!R.contains(cell, this.closedSet)) {
+                let tempG = current.g;
+                if (R.contains(cell, this.openSet)) {
+                    if(tempG < cell.g){
+                        cell.g = tempG;
+                    }
+                } else {
+                    cell.g = tempG;
+                    this.openSet.push(cell);
+                }
+
+                cell.h = this.heuristic(cell, this.end);
+                cell.f = cell.g+cell.h;
+            }
+        });
     }
 }
