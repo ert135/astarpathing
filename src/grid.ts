@@ -16,6 +16,7 @@ export default class Grid  {
     private cellSize: number;
     private mouseHover: MouseHover;
     private noSolutionFlag: boolean = false;
+    private path: Array<Cell>;
 
     constructor(cols: number, rows: number, size: number) {
         this.columns = cols;
@@ -30,6 +31,7 @@ export default class Grid  {
         this.buildNeighbors();
         this.calculateStartAndEnd();
         this.openSet.push(this.start);
+        this.path = [];
     }
 
     private buildGrid(): void {
@@ -60,6 +62,8 @@ export default class Grid  {
     private calculateStartAndEnd() {
         this.start = this.grid[0][0];
         this.end = this.grid[this.columns-1][this.rows-1];
+        this.start.wall = false;
+        this.end.wall = false;
     }
 
     public noSolution(): void {
@@ -94,14 +98,24 @@ export default class Grid  {
         })
     }
 
+    public drawPath(): void {
+        this.path.forEach((path: any, columnIndex: number) => {
+            path.show(color(214, 10, 146));
+        })
+    }
+
     private getHighestFValueIndex(): number {
         return this.openSet.reduce((accumlator: number, currentValue: Cell , index: number, array: Array<Cell>) => {
             return currentValue.f < array[accumlator].f ? index : accumlator;
         }, 0);
     }
 
-    private heuristic(pointA: Cell, pointB: Cell){
+    private heuristic(pointA: Cell, pointB: Cell) : any {
         return dist(pointA.x, pointA.y, pointB.x, pointB.y)
+    }
+
+    private buildPath(cell: Cell): void {
+        let path = new Array();
     }
 
     public step(): void {
@@ -110,35 +124,46 @@ export default class Grid  {
         let current = this.openSet[winnerFCellIndex];
 
         if (R.equals(current, this.end)) {
-            console.log('END')
+            console.log('End reachedf!!!');
+            let temp = current;
+            this.path.push(current);
+            while(temp.previous){
+                this.path.push(temp.previous);
+                temp = temp.previous;
+            }
             return;
         }
 
+        //remove winner from open set
         this.openSet = R.reject(R.equals(current), this.openSet);
+        
+        //add winner to closed set
         this.closedSet = R.insert(this.closedSet.length, current, this.closedSet)
+
+        //do mouse hover effect
         this.mouseHover.isIntersectingWithBox(this.grid);
 
-        if(!current){
+        if (!current) {
             return;
         }
 
-        let neighbors = current.getNeighbors();
-
-        neighbors.forEach((cell: Cell) => {
+        current.getNeighbors().forEach((neighbor: Cell) => {
             //adding one becasue all lengths are the same
-            if (!R.contains(cell, this.closedSet)) {
-                let tempG = current.g;
-                if (R.contains(cell, this.openSet)) {
-                    if(tempG < cell.g){
-                        cell.g = tempG;
+            if (!R.contains(neighbor, this.closedSet) && neighbor.wall === false) {
+
+                let tempG = current.g + 1;
+                if (R.contains(neighbor, this.openSet)) {
+                    if (tempG < neighbor.g) {
+                        neighbor.g = tempG;
                     }
                 } else {
-                    cell.g = tempG;
-                    this.openSet.push(cell);
+                    neighbor.g = tempG;
+                    this.openSet.push(neighbor);
                 }
 
-                cell.h = this.heuristic(cell, this.end);
-                cell.f = cell.g+cell.h;
+                neighbor.h = this.heuristic(neighbor, this.end);
+                neighbor.f = neighbor.g + neighbor.h;
+                neighbor.previous = current;
             }
         });
     }

@@ -13,6 +13,8 @@ export default class Cell {
     private grid: Array<Array<Cell>>;
     private rows: number;
     private columns: number;
+    public previous: Cell;
+    public wall: boolean = false;
 
     private LURDMoves = [
         [-1, 0],
@@ -36,10 +38,20 @@ export default class Cell {
        this.width = cellSize / cols;
        this.height = cellSize / rows;
        this.neighbors = new Array();
+       this.calculateWall();
+    }
+
+    private calculateWall(): void {
+        if(random(0,1) < 0.3){
+            this.wall = true;
+        }
     }
 
     public show(color: p5.Color): void {
         fill(color);
+        if(this.wall === true){
+            fill(0);
+        }
         stroke(0);
         rect(this.x * this.width, this.y * this.height, this.width, this.height);
     }

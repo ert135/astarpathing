@@ -21,9 +21,9 @@ let grid: Grid;
 let size = 800;
 
 let setup = function() {
-    console.log('Mouse hover is ', MouseHover);
+
     createCanvas(size, size);
-    grid =  new Grid(50,50, size);
+    grid = new Grid(35,35, size);
 }
 
 let draw = function() {
@@ -32,6 +32,7 @@ let draw = function() {
         grid.drawOpenSet();
         grid.drawClosedSet();
         grid.step();
+        grid.drawPath();
     } else {
         //perform stop procedure
     }
