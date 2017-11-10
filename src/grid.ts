@@ -151,19 +151,23 @@ export default class Grid  {
             //adding one becasue all lengths are the same
             if (!R.contains(neighbor, this.closedSet) && neighbor.wall === false) {
 
-                let tempG = current.g + 1;
+                let newpath = false;
                 if (R.contains(neighbor, this.openSet)) {
-                    if (tempG < neighbor.g) {
-                        neighbor.g = tempG;
+                    if (current.g < neighbor.g) {
+                        neighbor.g = current.g + 1;
+                        newpath = true;
                     }
                 } else {
-                    neighbor.g = tempG;
+                    newpath = true
+                    neighbor.g = current.g + 1;
                     this.openSet.push(neighbor);
                 }
 
-                neighbor.h = this.heuristic(neighbor, this.end);
-                neighbor.f = neighbor.g + neighbor.h;
-                neighbor.previous = current;
+                if (newpath) {
+                    neighbor.h = this.heuristic(neighbor, this.end);
+                    neighbor.f = neighbor.g + neighbor.h;
+                    neighbor.previous = current;
+                }
             }
         });
     }

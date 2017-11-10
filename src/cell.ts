@@ -49,7 +49,7 @@ export default class Cell {
 
     public show(color: p5.Color): void {
         fill(color);
-        if(this.wall === true){
+        if (this.wall === true) {
             fill(0);
         }
         stroke(0);
@@ -82,6 +82,12 @@ export default class Cell {
         //Add Left/Up/Right/Down Moves
         for (var i = 0; i < 4; i++) {
             const node = this.getNode(this.x + this.LURDMoves[i][0], this.y + this.LURDMoves[i][1]);
+            if (node) {
+                this.neighbors.push(node);
+            }
+        }
+        for (var i = 0; i < 4; i++) {
+            const node = this.getNode(this.x + this.DiagonalMoves[i][0], this.y + this.DiagonalMoves[i][1]);
             if (node) {
                 this.neighbors.push(node);
             }
