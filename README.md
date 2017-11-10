@@ -1,4 +1,4 @@
-# A* Pathing algorthim
+# A* Pathing algorithm
 
 An implementation of an A* pathing algorithm, written in typescript using p5. 
 
