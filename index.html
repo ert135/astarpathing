@@ -4,10 +4,17 @@
  <style>
     body {display:flex; justify-content: center; align-items: center; }
     canvas {border: 5px solid black;}
+    button {width:200px; height: 200px}
   </style>
   <meta charset="utf-8">
 
   <title>A*</title>
+  <script>
+    function startPath() {
+      console.log('Startin path!!!')
+      window.started = true;
+    }
+  </script>
   <meta name="description" content="A* PATHING ALGORTHIM" >
   <!-- <link rel="stylesheet" href="css/styles.css?"> -->
 </head>
@@ -15,5 +22,6 @@
   <body>	
     <script src="node_modules/p5/lib/p5.min.js"></script>
     <script src="dist/bundle.js"></script>
+    <button onclick="startPath()"> Start </button>
   </body>
 </html>

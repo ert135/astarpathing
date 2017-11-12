@@ -42,9 +42,9 @@ export default class Cell {
     }
 
     private calculateWall(): void {
-        if(random(0,1) < 0.3){
-            this.wall = true;
-        }
+        // if(random(0,1) < 0.3){
+        //     this.wall = true;
+        // }
     }
 
     public show(color: p5.Color): void {
@@ -60,6 +60,11 @@ export default class Cell {
         fill(color);
         stroke(54);
         rect(this.x * this.width, this.y * this.height, this.width, this.height);
+    }
+
+    public onClick(): void {
+        console.log('Calling click functin!!!');
+        this.wall ? this.wall = false : this.wall = true;
     }
 
     private getNode(x: number, y: number): any {

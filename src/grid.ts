@@ -4,7 +4,7 @@ import MouseHover from './mouseHover';
 import * as R from 'ramda';
 import * as gridFunctions from './gridFunctions'
 
-export default class Grid  {
+export default class Grid {
 
     private grid: Array<Array<Cell>>;
     private columns: number = 5;
@@ -23,6 +23,7 @@ export default class Grid  {
         this.rows = rows;
         this.cellSize = size;
         this.mouseHover = new MouseHover()
+        window.mouseClicked = this.mouseHover.mouseClicked
         this.closedSet = new Array();
         this.openSet = new Array();
         
@@ -56,7 +57,10 @@ export default class Grid  {
                this.grid[i][j].populateNeighbors();
             }
         }
-        console.log('Grid after  building neighbors is ', this.grid);
+    }
+
+    public getGrid(): Array<Array<Cell>> {
+        return this.grid;
     }
 
     private calculateStartAndEnd() {
@@ -104,6 +108,16 @@ export default class Grid  {
         })
     }
 
+    public showObsticles(): void {
+        this.grid.forEach((column: any, columnIndex: number) => {
+            column.forEach((row: Cell, rowIndex: number) => {
+                if (row.wall === true) {
+                    row.show(color(0, 0, 0));
+                }       
+            })
+        })
+    }
+
     private getHighestFValueIndex(): number {
         return this.openSet.reduce((accumlator: number, currentValue: Cell , index: number, array: Array<Cell>) => {
             return currentValue.f < array[accumlator].f ? index : accumlator;
@@ -124,7 +138,6 @@ export default class Grid  {
         let current = this.openSet[winnerFCellIndex];
 
         if (R.equals(current, this.end)) {
-            console.log('End reachedf!!!');
             let temp = current;
             this.path.push(current);
             while(temp.previous){
@@ -140,9 +153,6 @@ export default class Grid  {
         //add winner to closed set
         this.closedSet = R.insert(this.closedSet.length, current, this.closedSet)
 
-        //do mouse hover effect
-        this.mouseHover.isIntersectingWithBox(this.grid);
-
         if (!current) {
             return;
         }
@@ -152,6 +162,7 @@ export default class Grid  {
             if (!R.contains(neighbor, this.closedSet) && neighbor.wall === false) {
 
                 let newpath = false;
+                
                 if (R.contains(neighbor, this.openSet)) {
                     if (current.g < neighbor.g) {
                         neighbor.g = current.g + 1;

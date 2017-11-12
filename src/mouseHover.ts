@@ -7,6 +7,8 @@ export default class MouseHover {
 
     }
 
+    public currentCellHover: Cell = null;
+
     public isIntersectingWithBox(grid: Array<Array<Cell>>): void {
         //go through every box and check if the mosue is intersecting with any of them 
         let mouseXWithinBox = (cell: Cell) => {
@@ -28,7 +30,9 @@ export default class MouseHover {
         grid.forEach((cell) => {
             cell.forEach((cell: Cell) => {
                 if (mouseXWithinBox(cell) === true && mouseYWithinBox(cell) === true) {
+                    console.log('hovering', cell)
                     cell.hover(color(244, 40, 66));
+                    this.currentCellHover = cell;
                 }
             });
         });
@@ -36,6 +40,14 @@ export default class MouseHover {
 
     private between(x: number, min: number, max: number) : boolean {
         return x >= min && x <= max;
+    }
+
+    public mouseClicked = function(): void {
+        console.log('Mouse clicked!!!!', this.currentCellHover);
+        if (this.currentCellHover) {
+            console.log('Cell to click is ', this.currentCellHover);
+            this.currentCellHover.onClick();
+        }
     }
 
 }

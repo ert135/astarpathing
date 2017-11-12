@@ -4,6 +4,7 @@
 //import grid
 import Grid from './grid';
 import MouseHover from './mouseHover';
+import Cell from './cell';
 
 //extend existing window property, we have to put the draw and setup functinos of the global window object for p5 to work in global mode
 declare global {
@@ -14,34 +15,36 @@ declare global {
         mouseReleased: any;
         preload: any;
         mouseClicked: any;
+        started: boolean;
     }
 }
 
 let grid: Grid;
 let size = 800;
+let started = false;
+let mouseHover: MouseHover = null;
 
 let setup = function() {
-
     createCanvas(size, size);
     grid = new Grid(35,35, size);
+    mouseHover = new MouseHover();
 }
 
 let draw = function() {
+    mouseHover.isIntersectingWithBox(grid.getGrid());
+    grid.drawOpenSet();
+    grid.drawClosedSet();
     if (grid.hasNoSolution() === false) {
         grid.drawGrid();
-        grid.drawOpenSet();
-        grid.drawClosedSet();
-        grid.step();
-        grid.drawPath();
+        if(window.started === true) {
+            grid.step();
+            grid.drawPath();
+        }
     } else {
         //perform stop procedure
     }
 }
 
-let mouseClicked = function() {
-
-}
-
 window.setup = setup;
 window.draw = draw;
-window.mouseClicked = mouseClicked;
+window.started = started;
