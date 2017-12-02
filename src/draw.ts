@@ -26,17 +26,17 @@ let mouseHover: MouseHover = null;
 
 let setup = function() {
     createCanvas(size, size);
-    grid = new Grid(35,35, size);
+    grid = new Grid(30,30, size);
     mouseHover = new MouseHover();
 }
 
 let draw = function() {
     mouseHover.isIntersectingWithBox(grid.getGrid());
-    grid.drawOpenSet();
-    grid.drawClosedSet();
     if (grid.hasNoSolution() === false) {
         grid.drawGrid();
         if(window.started === true) {
+            grid.drawOpenSet();
+            grid.drawClosedSet();
             grid.step();
             grid.drawPath();
         }

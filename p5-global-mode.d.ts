@@ -1331,12 +1331,15 @@ declare function textWidth(theText: string): number;
 /**
  * Draws text to the screen.
  */
-declare function text(str: string, x: number, y: number, x2: number, y2: number): any;
+declare function text(str: string, x: number, y: number, x2?: number, y2?: number): any;
 
 /**
  * Sets the current font that will be drawn with the text() function.
  */
 declare function textFont(f: any|string): any;
+
+//allgns text
+declare function textAlign(string: string): any;
 
 // src/utilities/array_functions.js
 

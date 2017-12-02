@@ -91,8 +91,9 @@ export default class Grid {
     }
 
     public drawOpenSet(): void {
-        this.openSet.forEach((column: any, columnIndex: number) => {
+        this.openSet.forEach((column: Cell, columnIndex: number) => {
             column.show(color(66, 83, 244));
+            column.drawFValue();
         })
     }
 
@@ -128,8 +129,13 @@ export default class Grid {
         return dist(pointA.x, pointA.y, pointB.x, pointB.y)
     }
 
-    private buildPath(cell: Cell): void {
-        let path = new Array();
+    private buildPath(current: Cell): void {
+        let temp = current;
+        this.path.push(current);
+        while(temp.previous) {
+            this.path.push(temp.previous);
+            temp = temp.previous;
+        }
     }
 
     public step(): void {
@@ -137,13 +143,10 @@ export default class Grid {
         let winnerFCellIndex = this.getHighestFValueIndex();
         let current = this.openSet[winnerFCellIndex];
 
+        // this.buildPath(current)
+
         if (R.equals(current, this.end)) {
-            let temp = current;
-            this.path.push(current);
-            while(temp.previous){
-                this.path.push(temp.previous);
-                temp = temp.previous;
-            }
+            this.buildPath(current)
             return;
         }
 
@@ -164,7 +167,7 @@ export default class Grid {
                 let newpath = false;
                 
                 if (R.contains(neighbor, this.openSet)) {
-                    if (current.g < neighbor.g) {
+                    if (current.g + 1 < neighbor.g) {
                         neighbor.g = current.g + 1;
                         newpath = true;
                     }
@@ -180,6 +183,7 @@ export default class Grid {
                     neighbor.previous = current;
                 }
             }
+
         });
     }
 }

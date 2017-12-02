@@ -29,13 +29,17 @@ export default class MouseHover {
 
         grid.forEach((cell) => {
             cell.forEach((cell: Cell) => {
-                if (mouseXWithinBox(cell) === true && mouseYWithinBox(cell) === true) {
-                    console.log('hovering', cell)
+                if (mouseXWithinBox(cell) === true && mouseYWithinBox(cell) === true && mouseIsPressed) {
                     cell.hover(color(244, 40, 66));
-                    this.currentCellHover = cell;
+                    this.setCurrentHover(cell);
                 }
             });
         });
+    }
+
+    private setCurrentHover(cell:Cell): void {
+        cell.onClick();
+        this.currentCellHover = cell;
     }
 
     private between(x: number, min: number, max: number) : boolean {
@@ -44,10 +48,6 @@ export default class MouseHover {
 
     public mouseClicked = function(): void {
         console.log('Mouse clicked!!!!', this.currentCellHover);
-        if (this.currentCellHover) {
-            console.log('Cell to click is ', this.currentCellHover);
-            this.currentCellHover.onClick();
-        }
     }
 
 }

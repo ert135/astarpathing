@@ -15,6 +15,7 @@ export default class Cell {
     private columns: number;
     public previous: Cell;
     public wall: boolean = false;
+    private center: p5.Vector;
 
     private LURDMoves = [
         [-1, 0],
@@ -38,13 +39,19 @@ export default class Cell {
        this.width = cellSize / cols;
        this.height = cellSize / rows;
        this.neighbors = new Array();
-       this.calculateWall();
+       this.calculateCenter();
     }
 
-    private calculateWall(): void {
-        // if(random(0,1) < 0.3){
-        //     this.wall = true;
-        // }
+    private calculateCenter(): void {
+        this.center = new p5.Vector(this.x * this.width + this.width / 2, this.y * this.height + this.height / 2);
+    }
+
+    public drawFValue(): void {
+        let CENTER: any
+        fill(0);
+        textSize(18);
+        textAlign(CENTER);
+        text(this.f.toString().substring(0,2), this.center.x -9, this.center.y + 7);
     }
 
     public show(color: p5.Color): void {
@@ -52,6 +59,7 @@ export default class Cell {
         if (this.wall === true) {
             fill(0);
         }
+        //if cell is in the open set, draw the f value
         stroke(0);
         rect(this.x * this.width, this.y * this.height, this.width, this.height);
     }
@@ -63,8 +71,8 @@ export default class Cell {
     }
 
     public onClick(): void {
-        console.log('Calling click functin!!!');
-        this.wall ? this.wall = false : this.wall = true;
+        // this.wall ? this.wall = false : this.wall = true;
+        this.wall = true;
     }
 
     private getNode(x: number, y: number): any {
@@ -84,7 +92,6 @@ export default class Cell {
     }
 
     public populateNeighbors() {
-        //Add Left/Up/Right/Down Moves
         for (var i = 0; i < 4; i++) {
             const node = this.getNode(this.x + this.LURDMoves[i][0], this.y + this.LURDMoves[i][1]);
             if (node) {
