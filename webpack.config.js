@@ -24,7 +24,8 @@ module.exports = {
     },
 
     devServer: {
-        open: true
+        open: true,
+        writeToDisk: true,
     }
 
     // When importing a module whose path matches one of the following, just
